@@ -14,7 +14,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Profile } from './entity/profile';
-import { EntityManager } from 'typeorm';
+import { EntityManager, Like } from 'typeorm';
 import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { UrlGeneratorService } from 'nestjs-url-generator';
 import { Type } from 'class-transformer';
@@ -32,6 +32,9 @@ class ProfileQuery {
   @Type(() => Number)
   @Min(1)
   page?: number;
+
+  @IsOptional()
+  search?: string;
 }
 
 @Controller()
@@ -52,13 +55,16 @@ export class AppController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @Redirect()
   async showProfiles(@Query() query: ProfileQuery) {
-    const perPage: number = 10;
+    const perPage: number = 20;
 
     const currentPage = query.page || 1;
 
     const countPromise = this.entityManager.count(Profile);
 
     const profilesPromise = this.entityManager.find(Profile, {
+      where: {
+        ...(query.search ? { name: Like(`%${query.search}%`) } : {}),
+      },
       order: {
         createdAt: {
           direction: 'DESC',
@@ -116,7 +122,8 @@ export class AppController {
       getProfileUrl,
       getDeleteUrl,
       totalPages,
-      currentPage: currentPage,
+      currentPage,
+      search: query.search
     };
   }
 

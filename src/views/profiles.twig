@@ -1,6 +1,14 @@
 {% extends "index.twig" %}
 
 {% block content %}
+    <form>
+        <label>
+            <input type="search" name="search" value="{{ search }}" placeholder="Search"/>
+        </label>
+
+        <button type="submit">Search</button>
+    </form>
+
     {% if profiles|length %}
         <ul class="list-holder">
             {% for profile in profiles %}
@@ -32,6 +40,31 @@
     {% endfor %}
 
     <style>
+        form {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        form input {
+            padding: 7px 10px;
+            border: solid 1px #333;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        form button {
+            padding: 7px;
+            font-size: 1em;
+            text-transform: uppercase;
+            border-radius: 5px;
+            border: solid 1px green;
+            background-color: green;
+            color: white;
+        }
+
         .gg-remove {
             box-sizing: border-box;
             position: relative;
