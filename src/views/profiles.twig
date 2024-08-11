@@ -19,7 +19,7 @@
                 <div class="right">
                     <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
 
-                    <span class="attr">{{ (profile.duration / 1000000).toFixed(2) }}ms</span>
+                    <span class="attr">{{ profile.duration / 1000000 }}ms</span>
                     <a class="gg-remove" href="{{ getDeleteUrl(profile) }}"></a>
                 </div>
             </li>
