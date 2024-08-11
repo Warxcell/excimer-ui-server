@@ -3,10 +3,12 @@ import {
   Controller,
   Get,
   HttpRedirectResponse,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Query,
+  Redirect,
   Render,
   UsePipes,
   ValidationPipe,
@@ -37,7 +39,8 @@ export class AppController {
   constructor(
     private readonly entityManager: EntityManager,
     private readonly urlGeneratorService: UrlGeneratorService,
-  ) {}
+  ) {
+  }
 
   @Get('healthcheck')
   healthcheck() {
@@ -47,6 +50,7 @@ export class AppController {
   @Get()
   @Render('profiles.twig')
   @UsePipes(new ValidationPipe({ transform: true }))
+  @Redirect()
   async showProfiles(@Query() query: ProfileQuery) {
     const perPage: number = 10;
 
@@ -82,6 +86,15 @@ export class AppController {
         },
       });
     };
+    const getDeleteUrl = (profile: Profile) => {
+      return this.urlGeneratorService.generateUrlFromController({
+        controller: AppController,
+        controllerMethod: AppController.prototype.deleteProfile,
+        params: {
+          id: profile.id,
+        },
+      });
+    };
 
     const [profiles, count] = await Promise.all([
       profilesPromise,
@@ -101,9 +114,26 @@ export class AppController {
       profiles,
       getUrl,
       getProfileUrl,
+      getDeleteUrl,
       totalPages,
       currentPage: currentPage,
     };
+  }
+
+  @Get('delete-profile/:id')
+  @Redirect()
+  async deleteProfile(@Param('id') id: string) {
+    await this.entityManager.delete(Profile, { id });
+
+    const url = this.urlGeneratorService.generateUrlFromController({
+      controller: AppController,
+      controllerMethod: AppController.prototype.showProfiles,
+    });
+
+    return {
+      url,
+      statusCode: HttpStatus.FOUND,
+    } satisfies HttpRedirectResponse;
   }
 
   @Get('profile/:id')

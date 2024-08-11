@@ -5,14 +5,14 @@
         <ul class="list-holder">
             {% for profile in profiles %}
             <li class="list-item">
-                <span>
-                    <a href="{{ getProfileUrl(profile.id) }}">
-                        {{ profile.name }}
-                    </a>
-                    <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
+                <a href="{{ getProfileUrl(profile.id) }}">
+                    {{ profile.name }}
+                </a>
+                <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
 
-                    <span class="attr">{{ profile.duration / 1000000 }}ms</span>
-                </span>
+                <span class="attr">{{ profile.duration / 1000000 }}ms</span>
+
+                <a class="gg-remove" href="{{ getDeleteUrl(profile) }}"></a>
             </li>
             {% endfor %}
         </ul>
@@ -32,6 +32,30 @@
     {% endfor %}
 
     <style>
+        .gg-remove {
+            box-sizing: border-box;
+            position: relative;
+            display: block;
+            transform: scale(var(--ggs, 1));
+            width: 22px;
+            height: 22px;
+            border: 2px solid;
+            border-radius: 22px;
+        }
+        .gg-remove::before {
+            content: "";
+            display: block;
+            box-sizing: border-box;
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 5px;
+            top: 8px;
+            left: 4px;
+        }
+
+
         body {
             background-color: #f0f0f0;
             padding: 0;
