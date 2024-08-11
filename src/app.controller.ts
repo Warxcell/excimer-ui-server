@@ -24,7 +24,7 @@ class CreateProfile {
   name: string;
 
   @IsNotEmpty()
-  data: string;
+  data: Record<string | number, any>;
 }
 
 class ProfileQuery {
@@ -123,7 +123,7 @@ export class AppController {
       getDeleteUrl,
       totalPages,
       currentPage,
-      search: query.search
+      search: query.search,
     };
   }
 
@@ -179,11 +179,10 @@ export class AppController {
   async ingestProfile(@Body() data: CreateProfile) {
     const profile = new Profile();
     profile.name = data.name;
-    profile.data = data.data;
+    profile.data = JSON.stringify(data.data);
 
-    const dataParsed = JSON.parse(data.data);
-    if (dataParsed.profiles[0].unit === 'nanoseconds') {
-      profile.duration = dataParsed.profiles[0].endValue;
+    if (data.data.profiles[0].unit === 'nanoseconds') {
+      profile.duration = data.data.profiles[0].endValue;
     } else {
       profile.duration = BigInt(0);
     }
