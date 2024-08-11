@@ -16,11 +16,12 @@
                 <a href="{{ getProfileUrl(profile.id) }}">
                     {{ profile.name }}
                 </a>
-                <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
+                <div class="right">
+                    <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
 
-                <span class="attr">{{ profile.duration / 1000000 }}ms</span>
-
-                <a class="gg-remove" href="{{ getDeleteUrl(profile) }}"></a>
+                    <span class="attr">{{ (profile.duration / 1000000).toFixed(2) }}ms</span>
+                    <a class="gg-remove" href="{{ getDeleteUrl(profile) }}"></a>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -116,6 +117,13 @@
             list-style: none;
             display: flex;
             justify-content: space-between;
+        }
+
+        .list-item .right {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
         }
 
         .attr {
