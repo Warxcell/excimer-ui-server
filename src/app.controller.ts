@@ -2,17 +2,20 @@ import {
   Body,
   Controller,
   Get,
+  HttpRedirectResponse,
   NotFoundException,
   Param,
   Post,
+  Query,
   Render,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
-import { Profile } from './Entity/profile';
+import { Profile } from './entity/profile';
 import { EntityManager } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { UrlGeneratorService } from 'nestjs-url-generator';
+import { Type } from 'class-transformer';
 
 class CreateProfile {
   @IsNotEmpty()
@@ -22,13 +25,19 @@ class CreateProfile {
   data: string;
 }
 
+class ProfileQuery {
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
+  page?: number;
+}
+
 @Controller()
 export class AppController {
   constructor(
     private readonly entityManager: EntityManager,
     private readonly urlGeneratorService: UrlGeneratorService,
-  ) {
-  }
+  ) {}
 
   @Get('healthcheck')
   healthcheck() {
@@ -37,10 +46,25 @@ export class AppController {
 
   @Get()
   @Render('profiles.twig')
-  async showProfiles() {
-    const profiles = await this.entityManager.find(Profile);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async showProfiles(@Query() query: ProfileQuery) {
+    const perPage: number = 10;
 
-    const getUrl = (id: string) => {
+    const currentPage = query.page || 1;
+
+    const countPromise = this.entityManager.count(Profile);
+
+    const profilesPromise = this.entityManager.find(Profile, {
+      order: {
+        createdAt: {
+          direction: 'DESC',
+        },
+      },
+      skip: perPage * (currentPage - 1),
+      take: perPage,
+    });
+
+    const getProfileUrl = (id: string) => {
       return this.urlGeneratorService.generateUrlFromController({
         controller: AppController,
         controllerMethod: AppController.prototype.getProfile,
@@ -49,8 +73,37 @@ export class AppController {
         },
       });
     };
+    const getUrl = (page: number) => {
+      return this.urlGeneratorService.generateUrlFromController({
+        controller: AppController,
+        controllerMethod: AppController.prototype.showProfiles,
+        query: {
+          page: page.toString(),
+        },
+      });
+    };
 
-    return { profiles, getUrl };
+    const [profiles, count] = await Promise.all([
+      profilesPromise,
+      countPromise,
+    ]);
+
+    const totalPages = Math.ceil(count / perPage);
+
+    if (currentPage > totalPages) {
+      return {
+        url: getUrl(1),
+        statusCode: 302,
+      } satisfies HttpRedirectResponse;
+    }
+
+    return {
+      profiles,
+      getUrl,
+      getProfileUrl,
+      totalPages,
+      currentPage: currentPage,
+    };
   }
 
   @Get('profile/:id')

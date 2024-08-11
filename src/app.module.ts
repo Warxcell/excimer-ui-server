@@ -4,20 +4,18 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UrlGeneratorModule } from 'nestjs-url-generator';
 import { ConfigModule } from '@nestjs/config';
+import dataSourceOptions from './datasource';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT) || undefined,
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
+      ...dataSourceOptions,
+      // synchronize: process.env.NODE_ENV !== 'production',
       synchronize: true,
+      migrationsTableName: 'migrations',
       autoLoadEntities: true,
-      entities: [__dirname + '/Entity/*.{ts,js}'],
+      entities: [__dirname + '/entity/*.{ts,js}'],
     }),
     UrlGeneratorModule.forRoot({
       secret: process.env.APP_KEY,
@@ -25,7 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {
 }

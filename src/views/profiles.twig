@@ -1,20 +1,35 @@
 {% extends "index.twig" %}
 
 {% block content %}
-    <ul class="list-holder">
-        {% for profile in profiles %}
+    {% if profiles|length %}
+        <ul class="list-holder">
+            {% for profile in profiles %}
             <li class="list-item">
-            <span>
-                <a href="{{ getUrl(profile.id) }}">
-                    {{ profile.name }}
-                </a>
-                <data value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toDateString() }})</data>
+                        <span>
+                            <a href="{{ getProfileUrl(profile.id) }}">
+                                {{ profile.name }}
+                            </a>
+                            <data value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toDateString() }})</data>
 
-                {{ profile.duration / 1000000 }}ms
-            </span>
+                            {{ profile.duration / 1000000 }}ms
+                        </span>
             </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </ul>
+
+        <div class="pagination center">
+            <a {% if currentPage > 1 %}href="{{ getUrl(currentPage - 1) }}"
+               {% else %}class="disabled"{% endif %}>&laquo;</a>
+
+            {% for page in range(1, totalPages) %}
+                <a href="{{ getUrl(page) }}" class="{% if page == currentPage %}active{% endif %}">{{ page }}</a>
+            {% endfor %}
+
+            <a {% if currentPage < totalPages %}href="{{ getUrl(currentPage + 1) }}" {% else %}class="disabled"{% endif %}>&raquo;</a>
+        </div>
+    {% else %}
+    No profiles yet.
+    {% endfor %}
 
     <style>
         body {
@@ -46,6 +61,36 @@
             color: #999;
             font-style: italic;
             font-size: 0.8em;
+        }
+
+        .pagination {
+            display: inline-block;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            margin: 0 4px;
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .pagination a.disabled {
+            opacity: 0.5;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
         }
     </style>
 {% endblock %}
