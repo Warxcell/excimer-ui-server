@@ -17,7 +17,7 @@ permissions:
 jobs:
   helm:
     environment:
-      name: github-pages
+      name: helm chart
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
