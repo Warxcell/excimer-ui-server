@@ -14,7 +14,7 @@ export class Profile {
   @Column('json')
   data: string;
 
-  @Column('int')
+  @Column('bigint')
   duration: number;
 
   constructor() {
