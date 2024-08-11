@@ -185,7 +185,7 @@ export class AppController {
     if (dataParsed.profiles[0].unit === 'nanoseconds') {
       profile.duration = dataParsed.profiles[0].endValue;
     } else {
-      profile.duration = 0;
+      profile.duration = BigInt(0);
     }
 
     await this.entityManager.save(profile);

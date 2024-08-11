@@ -15,7 +15,7 @@ export class Profile {
   data: string;
 
   @Column('bigint')
-  duration: number;
+  duration: bigint;
 
   constructor() {
     this.createdAt = new Date();
