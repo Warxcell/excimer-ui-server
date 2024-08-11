@@ -120,7 +120,7 @@ export class AppController {
     };
   }
 
-  @Get('delete-profile/:id')
+  @Get('delete/:id')
   @Redirect()
   async deleteProfile(@Param('id') id: string) {
     await this.entityManager.delete(Profile, { id });
@@ -136,7 +136,7 @@ export class AppController {
     } satisfies HttpRedirectResponse;
   }
 
-  @Get('profile/:id')
+  @Get('show/:id')
   @Render('profile.twig')
   async getProfile(@Param('id') id: string) {
     const profile = await this.entityManager.findOneBy(Profile, { id });
@@ -157,7 +157,7 @@ export class AppController {
     return { profile, getUrl };
   }
 
-  @Get('profile-data/:id')
+  @Get('data/:id')
   async getProfileData(@Param('id') id: string) {
     const profile = await this.entityManager.findOneBy(Profile, { id });
     if (!profile) {
