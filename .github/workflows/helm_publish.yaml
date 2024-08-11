@@ -5,8 +5,15 @@ on:
     branches:
       - master
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  release:
+  helm:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +31,17 @@ jobs:
         run: |
           helm repo add common https://charts.bitnami.com/bitnami
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1
-        env:
-          CR_TOKEN: "${{ secrets.HELM_ACCESS_TOKEN }}"
+      - name: Package
+        run: helm package helm --destination .helm
+
+      - name: Index
+        run: helm repo index .helm
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.helm'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
