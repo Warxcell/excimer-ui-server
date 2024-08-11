@@ -8,7 +8,9 @@ import { urlencoded } from 'body-parser';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.use(urlencoded({ limit: '10mb', extended: true }));
+  app.use(
+    urlencoded({ limit: '10mb', extended: true, parameterLimit: 1000000 }),
+  );
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
