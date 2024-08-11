@@ -5,14 +5,14 @@
         <ul class="list-holder">
             {% for profile in profiles %}
             <li class="list-item">
-                        <span>
-                            <a href="{{ getProfileUrl(profile.id) }}">
-                                {{ profile.name }}
-                            </a>
-                            <data value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toDateString() }})</data>
+                <span>
+                    <a href="{{ getProfileUrl(profile.id) }}">
+                        {{ profile.name }}
+                    </a>
+                    <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
 
-                            {{ profile.duration / 1000000 }}ms
-                        </span>
+                    <span class="attr">{{ profile.duration / 1000000 }}ms</span>
+                </span>
             </li>
             {% endfor %}
         </ul>
@@ -33,6 +33,9 @@
 
     <style>
         body {
+            background-color: #f0f0f0;
+            padding: 0;
+            margin: 0;
             font-size: 20px;
         }
 
@@ -48,6 +51,7 @@
         }
 
         .list-item {
+            background-color: #fff;
             box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.5);
             padding: 10px;
             margin: 20px 0;
@@ -57,7 +61,7 @@
             justify-content: space-between;
         }
 
-        data {
+        .attr {
             color: #999;
             font-style: italic;
             font-size: 0.8em;
@@ -69,6 +73,14 @@
 
         .center {
             text-align: center;
+        }
+
+        .pagination {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
         }
 
         .pagination a {
@@ -87,9 +99,10 @@
 
         .pagination a.disabled {
             opacity: 0.5;
+            cursor: no-drop;
         }
 
-        .pagination a:hover:not(.active) {
+        .pagination a:hover:not(.active):not(.disabled) {
             background-color: #ddd;
         }
     </style>

@@ -1,5 +1,9 @@
 {% extends "index.twig" %}
 
+{% block title %}
+    {{ profile.name }} on {{ profile.createdAt.toLocaleString() }}
+{% endblock %}
+
 {% block content %}
     <iframe src="https://www.speedscope.app/#profileURL={{ getUrl(profile.id) }}&title={{ profile.name }}"
             title="{{ profile.name }}"
