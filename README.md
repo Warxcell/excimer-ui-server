@@ -17,9 +17,9 @@ You can deploy the server using one of the following methods:
 
 To send data to this server, you can:
 
-1. Use the [PSR Request Handler](https://github.com/Warxcell/excimer-psr-handler/) in any existing PSR-compliant server.
+1. Use the [PSR Request Handler](https://github.com/Warxcell/excimer-handler/) in any existing PSR-compliant server.
 2. Manually send data to `http://$host/profile` by directly
-   using [this PSR Client compatible class](https://github.com/Warxcell/excimer-psr-handler/blob/main/src/SpeedscopeDataSender.php)
+   using [this PSR Client compatible class](https://github.com/Warxcell/excimer-handler/blob/main/src/SpeedscopeDataSender.php)
    or any other tool.
 
 ![img.png](img.png)
