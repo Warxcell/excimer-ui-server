@@ -1,0 +1,51 @@
+{% extends "index.twig" %}
+
+{% block content %}
+    <ul class="list-holder">
+        {% for profile in profiles %}
+            <li class="list-item">
+            <span>
+                <a href="{{ getUrl(profile.id) }}">
+                    {{ profile.name }}
+                </a>
+                <data value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toDateString() }})</data>
+
+                {{ profile.duration / 1000000 }}ms
+            </span>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <style>
+        body {
+            font-size: 20px;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .list-holder {
+            padding: 0;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .list-item {
+            box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 10px;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        data {
+            color: #999;
+            font-style: italic;
+            font-size: 0.8em;
+        }
+    </style>
+{% endblock %}
