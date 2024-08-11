@@ -12,7 +12,7 @@ export class Profile {
   name: string;
 
   @Column('json')
-  data: string;
+  data: Record<string | number, any>;
 
   @Column('bigint')
   duration: bigint;

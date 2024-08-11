@@ -179,7 +179,7 @@ export class AppController {
   async ingestProfile(@Body() data: CreateProfile) {
     const profile = new Profile();
     profile.name = data.name;
-    profile.data = JSON.stringify(data.data);
+    profile.data = data.data;
 
     if (data.data.profiles[0].unit === 'nanoseconds') {
       profile.duration = data.data.profiles[0].endValue;
