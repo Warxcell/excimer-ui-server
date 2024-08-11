@@ -22,7 +22,7 @@
                {% else %}class="disabled"{% endif %}>&laquo;</a>
 
             {% for page in range(1, totalPages) %}
-                <a href="{{ getUrl(page) }}" class="{% if page == currentPage %}active{% endif %}">{{ page }}</a>
+                <a {% if page == currentPage %}class="active" {% else %} href="{{ getUrl(page) }}"{% endif %}>{{ page }}</a>
             {% endfor %}
 
             <a {% if currentPage < totalPages %}href="{{ getUrl(currentPage + 1) }}" {% else %}class="disabled"{% endif %}>&raquo;</a>
