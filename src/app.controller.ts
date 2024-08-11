@@ -24,7 +24,7 @@ class CreateProfile {
   name: string;
 
   @IsNotEmpty()
-  data: Record<string, any>;
+  data: string;
 }
 
 class ProfileQuery {
@@ -179,10 +179,11 @@ export class AppController {
   async ingestProfile(@Body() data: CreateProfile) {
     const profile = new Profile();
     profile.name = data.name;
-    profile.data = JSON.stringify(data.data);
+    profile.data = data.data;
 
-    if (data.data.profiles[0].unit === 'nanoseconds') {
-      profile.duration = data.data.profiles[0].endValue;
+    const dataParsed = JSON.parse(data.data);
+    if (dataParsed.profiles[0].unit === 'nanoseconds') {
+      profile.duration = dataParsed.profiles[0].endValue;
     } else {
       profile.duration = 0;
     }
