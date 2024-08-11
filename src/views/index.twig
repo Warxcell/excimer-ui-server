@@ -3,10 +3,29 @@
 <head>
     <meta charset="utf-8"/>
     <title>{% block title %}Excimer UI Server{% endblock %}</title>
+
+    {% block styles %}
+        <style>
+            body {
+                background-color: #f0f0f0;
+                padding: 0;
+                margin: 0;
+                font-size: 20px;
+            }
+
+            .app {
+                padding: 0;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        </style>
+    {% endblock %}
 </head>
 <body>
-{% block content %}
+<div class="app">
+    {% block content %}
 
-{% endblock %}
+    {% endblock %}
+</div>
 </body>
 </html>

@@ -109,7 +109,7 @@ export class AppController {
 
     const totalPages = Math.ceil(count / perPage);
 
-    if (currentPage > totalPages) {
+    if (totalPages && currentPage > totalPages) {
       return {
         url: getUrl(1),
         statusCode: 302,

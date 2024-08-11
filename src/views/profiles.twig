@@ -37,9 +37,12 @@
             <a {% if currentPage < totalPages %}href="{{ getUrl(currentPage + 1) }}" {% else %}class="disabled"{% endif %}>&raquo;</a>
         </div>
     {% else %}
-    No profiles yet.
+        <div>No profiles yet.</div>
     {% endfor %}
+{% endblock %}
 
+{% block styles %}
+    {{ parent() }}
     <style>
         form {
             display: flex;
@@ -89,23 +92,13 @@
             left: 4px;
         }
 
-
-        body {
-            background-color: #f0f0f0;
-            padding: 0;
-            margin: 0;
-            font-size: 20px;
-        }
-
         a {
             color: #333;
             text-decoration: none;
         }
 
         .list-holder {
-            padding: 0;
-            max-width: 1000px;
-            margin: 0 auto;
+
         }
 
         .list-item {
