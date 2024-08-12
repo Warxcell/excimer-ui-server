@@ -62,9 +62,22 @@ export class AppController {
     const countPromise = this.entityManager.count(Profile);
 
     const profilesPromise = this.entityManager.find(Profile, {
-      where: {
-        ...(query.search ? { name: Like(`%${query.search}%`) } : {}),
-      },
+      where: [
+        {
+          ...(query.search
+            ? {
+                name: Like(`%${query.search}%`),
+              }
+            : {}),
+        },
+        {
+          ...(query.search
+            ? {
+                notes: Like(`%${query.search}%`),
+              }
+            : {}),
+        },
+      ],
       order: {
         createdAt: {
           direction: 'DESC',
@@ -102,6 +115,11 @@ export class AppController {
       });
     };
 
+    const notesUrl = this.urlGeneratorService.generateUrlFromController({
+      controller: AppController,
+      controllerMethod: AppController.prototype.note,
+    });
+
     const [profiles, count] = await Promise.all([
       profilesPromise,
       countPromise,
@@ -124,6 +142,7 @@ export class AppController {
       totalPages,
       currentPage,
       search: query.search,
+      notesUrl,
     };
   }
 
@@ -131,6 +150,30 @@ export class AppController {
   @Redirect()
   async deleteProfile(@Param('id') id: string) {
     await this.entityManager.delete(Profile, { id });
+
+    const url = this.urlGeneratorService.generateUrlFromController({
+      controller: AppController,
+      controllerMethod: AppController.prototype.showProfiles,
+    });
+
+    return {
+      url,
+      statusCode: HttpStatus.FOUND,
+    } satisfies HttpRedirectResponse;
+  }
+
+  @Post('note')
+  @Redirect()
+  async note(@Body('id') id: string, @Body('text') notes: string | null) {
+    console.log(id);
+    console.log(notes);
+    await this.entityManager.update(
+      Profile,
+      { id },
+      {
+        notes,
+      },
+    );
 
     const url = this.urlGeneratorService.generateUrlFromController({
       controller: AppController,

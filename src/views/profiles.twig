@@ -1,7 +1,7 @@
 {% extends "index.twig" %}
 
 {% block content %}
-    <form>
+    <form class="search-form">
         <label>
             <input type="search" name="search" value="{{ search }}" placeholder="Search"/>
         </label>
@@ -16,6 +16,13 @@
                 <a href="{{ getProfileUrl(profile.id) }}">
                     {{ profile.name }}
                 </a>
+
+                <form action="{{ notesUrl }}" method="post">
+                    <input type="hidden" name="id" value="{{ profile.id }}" />
+                    <label>
+                        <input type="text" name="text" value="{{ profile.notes }}" placeholder="Notes"/>
+                    </label>
+                </form>
                 <div class="right">
                     <data class="attr" value="{{ profile.createdAt.toISOString() }}">({{ profile.createdAt.toLocaleString() }})</data>
 
@@ -44,7 +51,7 @@
 {% block styles %}
     {{ parent() }}
     <style>
-        form {
+        .search-form {
             display: flex;
             gap: 10px;
             justify-content: center;
@@ -98,7 +105,7 @@
         }
 
         .list-holder {
-            max-width: 1200px;
+            max-width: 1400px;
             padding: 0;
             margin: 0 auto;
         }
@@ -112,6 +119,7 @@
             list-style: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .list-item .right {
