@@ -25,6 +25,8 @@ class CreateProfile {
 
   @IsNotEmpty()
   data: Record<string | number, any>;
+
+  context?: Record<string | number, any>;
 }
 
 class ProfileQuery {
@@ -223,6 +225,7 @@ export class AppController {
     const profile = new Profile();
     profile.name = data.name;
     profile.data = data.data;
+    profile.context = data.context;
 
     if (data.data.profiles[0].unit === 'nanoseconds') {
       profile.duration = data.data.profiles[0].endValue;

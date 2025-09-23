@@ -17,6 +17,9 @@ export class Profile {
   @Column('json')
   data: Record<string | number, any>;
 
+  @Column({ type: 'json', nullable: true })
+  context: Record<string | number, any> = null;
+
   @Column('bigint')
   duration: bigint;
 

@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content %}
+    Context: {{ profile.context|json_encode }}
+
     <iframe src="https://www.speedscope.app/#profileURL={{ getUrl(profile.id) }}&title={{ profile.name }}"
             title="{{ profile.name }}"
             height="100%" width="100%">
