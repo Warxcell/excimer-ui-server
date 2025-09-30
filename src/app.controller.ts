@@ -14,7 +14,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Profile } from './entity/profile';
-import { EntityManager, Like } from 'typeorm';
+import { EntityManager, FindManyOptions, Like } from 'typeorm';
 import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { UrlGeneratorService } from 'nestjs-url-generator';
 import { Type } from 'class-transformer';
@@ -44,8 +44,7 @@ export class AppController {
   constructor(
     private readonly entityManager: EntityManager,
     private readonly urlGeneratorService: UrlGeneratorService,
-  ) {
-  }
+  ) {}
 
   @Get('healthcheck')
   healthcheck() {
@@ -61,9 +60,7 @@ export class AppController {
 
     const currentPage = query.page || 1;
 
-    const countPromise = this.entityManager.count(Profile);
-
-    const profilesPromise = this.entityManager.find(Profile, {
+    const queryOptions: FindManyOptions = {
       where: [
         {
           ...(query.search
@@ -87,7 +84,11 @@ export class AppController {
       },
       skip: perPage * (currentPage - 1),
       take: perPage,
-    });
+    };
+
+    const countPromise = this.entityManager.count(Profile, queryOptions);
+
+    const profilesPromise = this.entityManager.find(Profile, queryOptions);
 
     const getProfileUrl = (id: string) => {
       return this.urlGeneratorService.generateUrlFromController({
@@ -104,6 +105,7 @@ export class AppController {
         controllerMethod: AppController.prototype.showProfiles,
         query: {
           page: page.toString(),
+          search: query.search,
         },
       });
     };
