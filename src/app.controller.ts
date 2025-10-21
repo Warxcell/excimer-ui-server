@@ -11,10 +11,10 @@ import {
   Redirect,
   Render,
   UsePipes,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
 import { Profile } from './entity/profile';
-import { EntityManager, FindManyOptions, Like } from 'typeorm';
+import { EntityManager, FindManyOptions, Like, MoreThan } from 'typeorm';
 import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 import { UrlGeneratorService } from 'nestjs-url-generator';
 import { Type } from 'class-transformer';
@@ -37,6 +37,9 @@ class ProfileQuery {
 
   @IsOptional()
   search?: string;
+
+  @IsOptional()
+  duration?: number;
 }
 
 @Controller()
@@ -44,7 +47,8 @@ export class AppController {
   constructor(
     private readonly entityManager: EntityManager,
     private readonly urlGeneratorService: UrlGeneratorService,
-  ) {}
+  ) {
+  }
 
   @Get('healthcheck')
   healthcheck() {
@@ -60,23 +64,24 @@ export class AppController {
 
     const currentPage = query.page || 1;
 
+    const where: FindManyOptions['where'] = [];
+
+    if (query.search) {
+      where.push({
+        name: Like(`%${query.search}%`),
+      });
+      where.push({
+        notes: Like(`%${query.search}%`),
+      });
+    }
+    if (query.duration) {
+      where.push({
+        duration: MoreThan(query.duration * 1000000),
+      });
+    }
+
     const queryOptions: FindManyOptions = {
-      where: [
-        {
-          ...(query.search
-            ? {
-                name: Like(`%${query.search}%`),
-              }
-            : {}),
-        },
-        {
-          ...(query.search
-            ? {
-                notes: Like(`%${query.search}%`),
-              }
-            : {}),
-        },
-      ],
+      where,
       order: {
         createdAt: {
           direction: 'DESC',
@@ -145,7 +150,7 @@ export class AppController {
       getDeleteUrl,
       totalPages,
       currentPage,
-      search: query.search,
+      query,
       notesUrl,
     };
   }
