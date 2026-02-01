@@ -1,7 +1,7 @@
 ## Simple Profile Storage Server
 
 This server is designed to act as storage for profiles generated using
-the [Excimer PHP Extension](https://www.mediawiki.org/wiki/Excimer).
+the [Excimer PHP Extension](https://www.mediawiki.org/wiki/Excimer). (The visualization is done as the profile is sent to https://speedscope.app and loaded thru iframe)
 
 The project utilizes NodeJS and NestJS, and it requires MariaDB for data storage.
 
