@@ -18,7 +18,9 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
   app.setViewEngine('twig');
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'https://www.speedscope.app/',
+  });
 
   await app.listen(3000);
 }
