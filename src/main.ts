@@ -19,7 +19,7 @@ async function bootstrap() {
   app.setViewEngine('twig');
 
   app.enableCors({
-    origin: 'www.speedscope.app',
+    origin: 'https://www.speedscope.app',
   });
 
   await app.listen(3000);
